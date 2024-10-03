@@ -1,0 +1,259 @@
+<ion-header class="header-container ion-no-border">
+  <ion-toolbar>
+    <ion-grid class="ion-no-padding">
+      <ion-row class="row-wrapper">
+        <ion-col class="title-column">
+          <div lines="none" class="title-content  ion-no-margin ion-no-padding">
+            <h1>Users</h1>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+<!--end-->
+<ion-content>
+  <!--left container-->
+  <ng-template #userpageleft>
+    <div class="checkbox-content">
+      <ion-grid style="padding-inline-start: 0px; padding-inline-end: 0px;">
+        <ion-row class="aside-filter">
+          <ion-col size-md="12" size-xs="12">
+            <div style="margin-top: 0px;">
+              <label>User Type</label>
+              <ion-item fill="outline" class="dropdown-stacked">
+                <ion-label position="stacked"></ion-label>
+                <ion-select class="ion-no-padding" [interfaceOptions]="notifiService.customPopoverOptions"
+                  interface="popover" [(ngModel)]="filterCriteria.role">
+                  <ion-select-option value="ADMIN">Admin</ion-select-option>
+                  <ion-select-option value="USER">User</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </div>
+          </ion-col>
+          <ion-col size-md="12" size-xs="12">
+            <div>
+              <label>Email</label>
+              <ion-item fill="outline" class="textbox-stacked">
+                <ion-label position="stacked"></ion-label>
+                <ion-input name="email" type="email" placeholder="Email" [(ngModel)]="filterCriteria.email"></ion-input>
+              </ion-item>
+            </div>
+          </ion-col>
+          <ion-col size-md="12" size-xs="12">
+            <div>
+              <label>Phone Number</label>
+              <ion-item fill="outline" class="textbox-stacked">
+                <ion-label position="stacked"></ion-label>
+                <ion-input name="phoneNumber" inputmode="numeric" (keypress)="numericOnly($event)"
+                  placeholder="Phone Number" [(ngModel)]="filterCriteria.telephone_number"></ion-input>
+              </ion-item>
+            </div>
+          </ion-col>
+          <ion-col size-md="12" size-xs="12">
+            <div>
+              <label>Device Identifier</label>
+              <ion-item fill="outline" class="textbox-stacked">
+                <ion-label position="stacked"></ion-label>
+                <ion-input name="deviceIdentifier" placeholder="Device Identifier" type="text"
+                  [(ngModel)]="filterCriteria.identifier"></ion-input>
+              </ion-item>
+            </div>
+          </ion-col>
+          <ion-col size-md="12" size-xs="12">
+            <div>
+              <label>Data Source</label>
+              <ion-item fill="outline" class="textbox-stacked">
+                <ion-label position="stacked"></ion-label>
+                <ion-input name="externalDataSource" type="text" placeholder="Data Source"
+                  [(ngModel)]="filterCriteria.data_source"></ion-input>
+              </ion-item>
+            </div>
+          </ion-col>
+          <ion-col size-md="12" size-xs="12">
+            <div>
+              <label>External Source Id</label>
+              <ion-item fill="outline" class="textbox-stacked">
+                <ion-label position="stacked"></ion-label>
+                <ion-input name="sourceId" placeholder="External Source Id" type="text"
+                  [(ngModel)]="filterCriteria.external_source_id"></ion-input>
+              </ion-item>
+            </div>
+          </ion-col>
+          <ion-col size-md="12" size-xs="12">
+            <div>
+              <ion-row style="margin-top: 13px;" class="aside-filter">
+                <ion-col size="6" class="ion-no-padding">
+                  <p class="ion-no-margin" style="margin-bottom: 5px">Tags</p>
+                  <ion-item fill="outline" class="dropdown-stacked"
+                    style="margin-right: 2px; --background:var(--ion-color-background)">
+                    <ion-label position="stacked"></ion-label>
+                    <ion-select class="ion-no-padding" [interfaceOptions]="notifiService.customPopoverOptions"
+                      interface="popover" dropdown-slot="start" [(ngModel)]="filterCriteria.tag_field"
+                      placeholder="-select-">
+                      <ion-select-option *ngFor="let tags of listOfTags"
+                        [value]="tags.name">{{tags.name}}</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-col>
+                <ion-col size="6" class="ion-no-padding">
+                  <p class="ion-no-margin" style="margin-bottom: 5px; margin-left: 6px">Value</p>
+                  <ion-item fill="outline" class="textbox-stacked"
+                    style="margin-left: 3px;--background:var(--ion-color-background)">
+                    <ion-label position="stacked"></ion-label>
+                    <ion-input name="tag_value" placeholder="Value" type="text"
+                      [(ngModel)]="filterCriteria.tag_value"></ion-input>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+  </ng-template>
+  <ng-template #userpageleftfooter>
+    <div class="checkbox-content" style="margin: 20px 0px 20px 0px;">
+      <ion-row>
+        <ion-col size="6" class="ion-no-padding">
+          <ion-button class="m-r" expand="block" (click)="onReset()" color="secondary"
+            style="margin: 0px 4px 0px 0px; padding-bottom: 1px;">
+            <ion-label>Reset</ion-label>
+          </ion-button>
+        </ion-col>
+        <ion-col size="6" class="ion-no-padding">
+          <ion-button class="m-l" expand="block" (click)="onSearch()" color="primary"
+            style="margin: 0px 0px 0px 3px; padding-right: 1px; padding-bottom: 1px;">
+            <ion-label>Search</ion-label>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+    <!-- </ion-footer> -->
+  </ng-template>
+  <div class="wrapper">
+    <ion-grid class="ion-no-padding category-grid-container">
+      <ion-row class="h-100-per">
+        <ion-col class="user-side-container ion-no-padding ">
+          <!-- div for column separation -->
+          <div class="left-side-panel customScroller ion-hide-lg-down">
+            <!-- heading search category -->
+            <ion-row class="ion-margin-top">
+              <ion-col class="ion-no-padding">
+                <h2 class="ion-margin-vertical search-criteria-header">Search Criteria</h2>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ng-container [ngTemplateOutlet]="userpageleft"></ng-container>
+              <ng-container [ngTemplateOutlet]="userpageleftfooter"></ng-container>
+            </ion-row>
+          </div>
+          <!-- angular material for table -->
+
+          <!-- Angular material -->
+          <div class="table-media-query" style="background-color:var(--ion-color-background)">
+            <ion-grid class=" padding-hide-md-down right-contant">
+              <ion-row>
+                <ion-col size-md="12" class="ion-no-padding">
+                  <ion-row>
+                    <!-- table-top-layer-btns -->
+                    <ion-col size-md="3.7" offset-md="0" class="ion-hide-lg-up ion-hide-sm-down ion-no-padding">
+                      <div class=" filterSmLabel">
+                        <div class="staticLabel">
+                          <ion-chip [outline]="true" id="open-filter-model-userProfile-tab-view">
+                            <ion-icon name="funnel-outline"></ion-icon>
+                            <ion-label class="filter_label">Search Criteria</ion-label>
+                          </ion-chip>
+                        </div>
+                      </div>
+                    </ion-col>
+                    <ion-col size-lg="8" offset-lg="4" size-md="8" offset-md="0" size-sm="12" offset-sm="0" size-xs="12"
+                      offset-xs="0" class=" ion-no-padding ion-margin">
+                      <div class="table-top-layer-btns">
+                        <!-- <ion-searchbar placeholder="Search" show-clear-button="focus"
+                          [(ngModel)]="userProfileTableDetails.search" matInput (ionChange)="userProfileGrid?.search()"
+                          #input class="ion-custom-search ion-no-padding ">
+                        </ion-searchbar> -->
+                        <ion-button routerLink="/user-profile/view_attribute" expand="block"
+                          routerLinkActive="active-link"
+                          class="create-view-btn ion-no-margin  ion-text-capitalize create-ion-button" color="tertiary">
+                          <ion-img slot="start"
+                            src="../../../assets/icons/{{notifiService.themeName}}/create-category.svg"></ion-img>
+                          <!-- <ion-icon name="create-outline"></ion-icon> -->
+                          <ion-label>View Attribute</ion-label>
+                        </ion-button>
+                      </div>
+                    </ion-col>
+                    <ion-col size-lg="8" offset-lg="4" size-md="12" offset-md="0" size-sm="12" offset-sm="0"
+                      size-xs="12" offset-xs="0" class="ion-hide-sm-up ion-no-padding">
+                      <div class=" filterSmLabel">
+                        <div class="staticLabel">
+                          <ion-chip [outline]="true" id="open-filter-model-userProfile">
+                            <ion-icon name="funnel-outline"></ion-icon>
+                            <ion-label class="filter_label">Search Criteria</ion-label>
+                          </ion-chip>
+                        </div>
+                      </div>
+                      <!--sm device filter model -->
+                      <ion-modal [backdropDismiss]="false" #modal trigger="open-filter-model-userProfile"
+                        class="template-filter" animated={true}>
+                        <ng-template>
+                          <ion-header class="ion-no-border config-header">
+                            <ion-toolbar>
+                              <ion-title style="font-size: 16px;">Search Criteria</ion-title>
+                              <ion-buttons slot="end">
+                                <ion-icon class="close_icon" (click)="onClose()" name="close-outline"></ion-icon>
+                              </ion-buttons>
+                            </ion-toolbar>
+                          </ion-header>
+                          <ion-content>
+                            <ion-row>
+                              <ion-col class="aside-filter">
+                                <ng-container [ngTemplateOutlet]="userpageleft"></ng-container>
+                              </ion-col>
+                            </ion-row>
+                          </ion-content>
+                          <ion-footer class="footer-view">
+                            <ng-container [ngTemplateOutlet]="userpageleftfooter"></ng-container>
+                          </ion-footer>
+                        </ng-template>
+                      </ion-modal>
+                      <ion-modal [backdropDismiss]="false" #modal trigger="open-filter-model-userProfile-tab-view"
+                        class="template-filter" animated={true}>
+                        <ng-template>
+                          <ion-header class="ion-no-border config-header">
+                            <ion-toolbar>
+                              <ion-title style="font-size: 16px;">Search Criteria</ion-title>
+                              <ion-buttons slot="end">
+                                <ion-icon class="close_icon" (click)="onClose()" name="close-outline"></ion-icon>
+                              </ion-buttons>
+                            </ion-toolbar>
+                          </ion-header>
+                          <ion-content>
+                            <ion-row>
+                              <ion-col class="aside-filter">
+                                <ng-container [ngTemplateOutlet]="userpageleft"></ng-container>
+                              </ion-col>
+                            </ion-row>
+                          </ion-content>
+                          <ion-footer class="footer-view">
+                            <ng-container [ngTemplateOutlet]="userpageleftfooter"></ng-container>
+                          </ion-footer>
+                        </ng-template>
+                      </ion-modal>
+                    </ion-col>
+                  </ion-row>
+                </ion-col>
+                <!-- Angular Material DATATABLE -->
+                <ion-col size="12" class="ion-no-padding">
+                  <app-data-table *ngIf="isInitTriggered" #user_profile_grid
+                    [tableDetails]="userProfileTableDetails"></app-data-table>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

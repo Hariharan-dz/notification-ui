@@ -1,0 +1,268 @@
+<ion-content class="ion-no-padding">
+  <app-config-navigation-comp activeMenu="TEMPLATE"></app-config-navigation-comp>
+  <div class="wrappper">
+    <ion-grid class="ion-no-padding" class="template-grid-container">
+      <ion-row class="h-100-per">
+        <ion-col size="12" style="display: flex; flex-direction: row;" class="ion-no-padding">
+          <div class="template-side-container ion-no-padding ion-hide-lg-down"
+            style=" background-color: var(--ion-color-secondary); width:274px; min-width:  274px;">
+            <!-- category list  -->
+            <ion-list>
+              <ion-item class="category-list-header"
+                style="--padding-start: 26px; --padding-end: 24px; --inner-padding-end:0;">
+                <ion-list-header class="font-size ion-no-padding">
+                  <ion-text class="category-list">Category</ion-text>
+                  <span class="total_value">({{categoryList.length}})</span>
+                  <ion-label style="text-align: right">
+                    <a title="Category filter" (click)="hideAndSearch()"
+                      class="font-size filterSearchbarhide ion-no-padding ion-no-margin cursor-pointer"><ion-icon
+                        name="funnel-outline" class="pointer-none"></ion-icon></a>
+                  </ion-label>
+                </ion-list-header>
+              </ion-item>
+              <ion-list class="filter-search-option ion-padding-horizontal" *ngIf="hideSearch">
+                <ion-searchbar placeholder="Search Category" [(ngModel)]="category_search"
+                  (ngModelChange)="categoryFilter()" class="ion-search-bar ion-no-padding">
+                </ion-searchbar>
+              </ion-list>
+              <!-- scrollable content -->
+              <div class="scrollable-content">
+                <div class="category-content">
+                  <ion-item class="category_list" style="--padding-start: 19px; --padding-end: 19px;"
+                    *ngIf="categoryList.length > 0">
+                    <ion-checkbox (click)="selectOrUnselectAllCategory($event)"
+                      [indeterminate]="selectedCategotyList.length > 0 && selectedCategotyList.length !== categoryList.length"
+                      [checked]="selectedCategotyList.length === categoryList.length"></ion-checkbox>
+                    <ion-label class="ion-padding"> All </ion-label>
+                  </ion-item>
+                  <!-- if no data template not found -->
+                  <ion-item class="category_list" *ngIf="categoryFilter()">
+                    <ion-label class="ion-padding"> No
+                      category matches as <span style="color:red">{{category_search}}</span> </ion-label>
+                  </ion-item>
+                  <ion-list class="category_list">
+                    <ion-item style="--padding-start: 19px; --padding-end: 19px;"
+                      *ngFor="let filter of categoryList | filter: { name: category_search }" class="category_list">
+                      <ion-checkbox (click)="filteredCategory($event, filter.id)"
+                        [checked]="selectedCategotyList.indexOf(filter.id) !== -1"></ion-checkbox>
+                      <ion-label class="ion-padding"> {{filter.name}} </ion-label>
+                    </ion-item>
+                  </ion-list>
+                </div>
+              </div>
+            </ion-list>
+          </div>
+          <div style="width:calc(100%); " class="ion-no-padding right-content">
+            <ion-grid class="padding-hide-md-down template-container">
+              <ion-row>
+                <ion-col size="12" class="ion-no-padding">
+                  <ion-row>
+                    <!-- two btn -->
+                    <ion-col size-md="2" offset-md="0" class="ion-hide-lg-up ion-hide-sm-down ion-no-padding">
+                      <div class=" filterSmLabel">
+                        <div class="staticLabel">
+                          <ion-chip [outline]="true" id="open-filter-model-tab-view">
+                            <ion-icon name="funnel-outline"></ion-icon>
+                            <ion-label class="filter_label">Search Criteria</ion-label>
+                          </ion-chip>
+                        </div>
+                      </div>
+                    </ion-col>
+                    <ion-col size-lg="8" offset-lg="4" size-md="10" offset-md="0" size-sm="12" offset-sm="0"
+                      size-xs="12" offset-xs="0" class=" ion-no-padding ion-margin-vertical ">
+                      <div class="table-top-layer-btns">
+                        <ion-searchbar placeholder="Search" [(ngModel)]=" templateTableDetails.search"
+                          show-clear-button="never" matInput (ionChange)="templateGrid?.search()" #input
+                          class="ion-custom-search ion-no-padding">
+                        </ion-searchbar>
+                        <ion-button routerLink="/configuration/template/create" expand="block"
+                          routerLinkActive="active-link" class="ion-no-margin ion-text-capitalize create-ion-button"
+                          color="tertiary">
+                          <ion-img slot="start" class="create-icon"
+                            src="../../../assets/icons/{{notifiService.themeName}}/create-temp.svg"></ion-img>
+                          <!-- <ion-icon name="create-outline"></ion-icon> -->
+                          <ion-label> Create Template </ion-label>
+                        </ion-button>
+                      </div>
+                    </ion-col>
+                    <ion-col class="ion-hide-sm-up ion-no-padding">
+                      <div class=" filterSmLabel">
+                        <div class="staticLabel">
+                          <ion-chip [outline]="true" id="open-filter-model">
+                            <ion-badge>{{selectedCategotyList.length}}</ion-badge>
+                            <ion-icon name="funnel-outline"></ion-icon>
+                            <ion-label class="filter_label">Filter</ion-label>
+                          </ion-chip>
+                        </div>
+                        <div class="staticLabel">
+                          <ion-chip [outline]="true" class="showAll"
+                            *ngIf="categoryList.length===selectedCategotyList.length">
+                            <ion-icon name="layers-outline"></ion-icon>
+                            <ion-label id="open-filter-model">All</ion-label>
+                            <ion-icon name="close" class="close_icon"
+                              (click)="removeCategorydata(null,'unClickAll')"></ion-icon>
+                          </ion-chip>
+                        </div>
+                        <div *ngFor="let filteredCategoryList of categoryList">
+                          <ion-chip [outline]="true"
+                            *ngIf="selectedCategotyList.indexOf(filteredCategoryList.id) !== -1 && categoryList.length!==selectedCategotyList.length">
+                            <ion-label>{{filteredCategoryList.name}}
+                            </ion-label>
+                            <ion-icon name="close" (click)="removeCategorydata(filteredCategoryList.id)"></ion-icon>
+                          </ion-chip>
+                        </div>
+                      </div>
+                      <!--sm device filter model -->
+                      <ion-modal [backdropDismiss]="false" #modal trigger="open-filter-model" class="template-filter"
+                        animated={true}>
+                        <ng-template>
+                          <ion-header class="ion-no-border config-header">
+                            <ion-toolbar>
+                              <ion-title style="font-size: 16px;">Search Criteria</ion-title>
+                              <ion-buttons slot="end">
+                                <ion-icon class="close_icon" (click)="onClose()" name="close-outline"></ion-icon>
+                              </ion-buttons>
+                            </ion-toolbar>
+                          </ion-header>
+                          <ion-content>
+                            <div *ngIf="categoryList.length!==0" style="height:10px">
+                              <ion-grid class="ion-no-padding">
+                                <ion-row>
+                                  <ion-col class="sm_search_input ion-no-padding">
+                                    <ion-item class="textarea ion-margin-horizontal ">
+                                      <ion-input [(ngModel)]="mobile_Category_Search" placeholder="Search Category"
+                                        class=""></ion-input>
+                                      <ion-icon name="search-outline" style="color:var(--ion-color-primary)"></ion-icon>
+                                    </ion-item>
+                                  </ion-col>
+                                </ion-row>
+                              </ion-grid>
+                              <ion-list>
+                                <ion-item class="category-list-header category-item-title">
+                                  <ion-list-header class="font-size ion-no-padding">
+                                    <ion-text class="category-list">Select Category</ion-text>
+                                    <span class="total_value">({{categoryList.length}})</span>
+                                  </ion-list-header>
+                                </ion-item>
+                                <!-- scrollable MOBILE content -->
+                                <div class="scrollable-content scrollableSmContent">
+                                  <div class="category-Sm-Content">
+                                    <ion-item class="category_list" style="--padding-start: 19px; --padding-end: 19px;"
+                                      *ngIf="categoryList.length > 0">
+                                      <ion-checkbox (click)="selectOrUnselectAllCategory($event)"
+                                        [indeterminate]="selectedCategotyList.length > 0 && selectedCategotyList.length !== categoryList.length"
+                                        [checked]="selectedCategotyList.length === categoryList.length"></ion-checkbox>
+                                      <ion-label class="ion-padding"> All </ion-label>
+                                    </ion-item>
+                                    <ion-list class="category_list" style="height: 324px;">
+                                      <ion-item style="--padding-start: 19px; --padding-end: 19px;"
+                                        *ngFor="let filter of categoryList | filter: { name: mobile_Category_Search }"
+                                        class="category_list">
+                                        <ion-checkbox (click)="filteredCategory($event, filter.id)"
+                                          [checked]="selectedCategotyList.indexOf(filter.id) !== -1"></ion-checkbox>
+                                        <ion-label class="ion-padding"> {{filter.name}} </ion-label>
+                                      </ion-item>
+                                    </ion-list>
+                                  </div>
+                                </div>
+                              </ion-list>
+                              <div>
+                                <ion-buttons class="filter-buttons-container">
+                                  <ion-button color="secondary" (click)="removeCategorydata(null,'clear')">
+                                    <ion-label>Clear</ion-label>
+                                  </ion-button>
+                                  <ion-button color="primary" (click)="onClose()">
+                                    <ion-label>Apply</ion-label>
+                                  </ion-button>
+                                </ion-buttons>
+                              </div>
+                            </div>
+                          </ion-content>
+                        </ng-template>
+                      </ion-modal>
+                      <ion-modal [backdropDismiss]="false" #modal trigger="open-filter-model-tab-view"
+                        class="template-filter" animated={true}>
+                        <ng-template>
+                          <ion-header class="ion-no-border config-header">
+                            <ion-toolbar>
+                              <ion-title style="font-size: 16px;">Search Criteria</ion-title>
+                              <ion-buttons slot="end">
+                                <ion-icon class="close_icon" (click)="onClose()" name="close-outline"></ion-icon>
+                              </ion-buttons>
+                            </ion-toolbar>
+                            <ion-grid class="ion-no-padding">
+                              <ion-row>
+                                <ion-col class="sm_search_input ion-no-padding">
+                                  <ion-item class="textarea ion-margin-horizontal ">
+                                    <ion-input [(ngModel)]="mobile_Category_Search" placeholder="Search Category"
+                                      class=""></ion-input>
+                                    <ion-icon name="search-outline" style="color:var(--ion-color-primary)"></ion-icon>
+                                  </ion-item>
+                                  <ion-item lines="none" class="category-list-header category-item-title">
+                                    <ion-list-header class="font-size ion-no-padding">
+                                      <ion-text class="category-list">Select Category</ion-text>
+                                      <span class="total_value">({{categoryList.length}})</span>
+                                    </ion-list-header>
+                                  </ion-item>
+                                </ion-col>
+                              </ion-row>
+                            </ion-grid>
+                          </ion-header>
+                          <ion-content>
+                            <div *ngIf="categoryList.length!==0" style="height:10px">
+                              <ion-list>
+                                <!-- scrollable MOBILE content -->
+                                <div class="scrollable-content scrollableSmContent">
+                                  <div class="category-Sm-Content">
+                                    <ion-item class="category_list" style="--padding-start: 19px; --padding-end: 19px;"
+                                      *ngIf="categoryList.length > 0">
+                                      <ion-checkbox (click)="selectOrUnselectAllCategory($event)"
+                                        [indeterminate]="selectedCategotyList.length > 0 && selectedCategotyList.length !== categoryList.length"
+                                        [checked]="selectedCategotyList.length === categoryList.length"></ion-checkbox>
+                                      <ion-label class="ion-padding"> All </ion-label>
+                                    </ion-item>
+                                    <ion-list class="category_list" style="height: 324px;">
+                                      <ion-item style="--padding-start: 19px; --padding-end: 19px;"
+                                        *ngFor="let filter of categoryList | filter: { name: mobile_Category_Search }"
+                                        class="category_list">
+                                        <ion-checkbox (click)="filteredCategory($event, filter.id)"
+                                          [checked]="selectedCategotyList.indexOf(filter.id) !== -1"></ion-checkbox>
+                                        <ion-label class="ion-padding"> {{filter.name}} </ion-label>
+                                      </ion-item>
+                                    </ion-list>
+                                  </div>
+                                </div>
+                              </ion-list>
+                            </div>
+                          </ion-content>
+                          <ion-footer>
+                            <div>
+                              <ion-buttons class="filter-buttons-container">
+                                <ion-button color="secondary" (click)="removeCategorydata(null,'clear')">
+                                  <ion-label>Clear</ion-label>
+                                </ion-button>
+                                <ion-button color="primary" (click)="onClose()">
+                                  <ion-label>Apply</ion-label>
+                                </ion-button>
+                              </ion-buttons>
+                            </div>
+                          </ion-footer>
+                        </ng-template>
+                      </ion-modal>
+                    </ion-col>
+                    <!-- Angular Material DATATABLE -->
+                    <div class="table-media-query padding-hide-md-down">
+                      <app-data-table *ngIf="isInitTriggered" #template_grid
+                        [tableDetails]="templateTableDetails"></app-data-table>
+                    </div>
+                  </ion-row>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

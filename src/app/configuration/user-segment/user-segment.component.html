@@ -1,0 +1,33 @@
+<ion-content>
+  <app-config-navigation-comp activeMenu="USER_SEGMENT"></app-config-navigation-comp>
+  <ion-grid class="padding-hide-md-down userSegment-grid-container">
+    <ion-row>
+      <ion-col size="12" class="ion-no-padding ">
+        <ion-row>
+          <ion-col size-lg="6" offset-lg="6" size-md="12" offset-md="0" size-sm="12" offset-sm="0" size-xs="12"
+            offset-xs="0" class=" ion-no-padding ion-margin">
+            <div class="table-top-layer-btns">
+              <ion-searchbar placeholder="Search" show-clear-button="focus" [(ngModel)]="userTableDetails.search"
+                matInput (ionChange)="userSegmentGrid?.search()" #input class="ion-custom-search ion-no-padding ">
+              </ion-searchbar>
+              <ion-button routerLink="/configuration/user-segment/create" expand="block" routerLinkActive="active-link"
+                class="ion-no-margin  ion-text-capitalize create-ion-button" color="tertiary">
+                <ion-img slot="start" class="create-icon"
+                  src="../../../assets/icons/{{notifiService.themeName}}/create-category.svg"></ion-img>
+                <!-- <ion-icon name="create-outline"></ion-icon> -->
+                <ion-label>Create UserSegment</ion-label>
+              </ion-button>
+            </div>
+          </ion-col>
+          <!-- Angular Material DATATABLE -->
+          <ion-col size="12" class="ion-no-padding">
+            <app-data-table *ngIf="isInitTriggered" #userSegment_grid
+              [tableDetails]="userTableDetails"></app-data-table>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</ion-content>

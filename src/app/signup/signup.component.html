@@ -1,0 +1,218 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+<ion-app class="signup">
+  <ion-header class="ion-no-border">
+    <ion-toolbar [color]="this.notifiService.themeName == 'dot-mobile' ? 'primary' : ''">
+      <div slot="start" class="header-logo">
+        <ion-item lines="none" color="priamry" class="ion-no-padding">
+          <ion-img *ngIf="this.notifiService.themeName == 'dot-mobile'" src="../../assets/icons/dot-mobile/logo.svg"
+            class="mainLogo"></ion-img>
+          <ion-img *ngIf="this.notifiService.themeName == 'mobilex'" src="../../assets/icons/mobilex/logo.png"
+            class="mainLogo"></ion-img>
+        </ion-item>
+      </div>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-grid class="overlay">
+      <ion-row>
+        <ion-col size-md="6" offset-md="5" size-lg="4" offset-lg="6" class="signup-container"
+          *ngIf="showVerificationCodeView===false">
+          <div class="fixed-form">
+            <form (ngSubmit)="signUp()">
+              <ion-card>
+                <ion-row>
+                  <ion-col class="ion-text-center">
+                    <div class="title-tag ion-text-center">
+                      Sign up
+                    </div>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>
+                    <ion-item fill="outline" class="textbox">
+                      <ion-label position="floating">First Name
+                        <span class="mandatory-field">*</span>
+                      </ion-label>
+                      <ion-input name="first_name" type="text" [(ngModel)]="user.first_name"></ion-input>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col>
+                    <ion-item fill="outline" class="textbox">
+                      <ion-label position="floating">Last Name
+                        <span class="mandatory-field">*</span>
+                      </ion-label>
+                      <ion-input name="last_name" type="text" [(ngModel)]="user.last_name"></ion-input>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col class="ion-padding-top">
+                    <ion-item fill="outline" class="textbox">
+                      <ion-label position="floating">Date Of Birth</ion-label>
+                      <ion-input name="date_of_birth" placeholder="MM/DD/YYYY" type="date"
+                        [(ngModel)]="user.date_of_birth" max="{{today | date:'yyyy-MM-dd'}}"></ion-input>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col class="ion-padding-top">
+                    <ion-item fill="outline" class="dropdown myclass">
+                      <ion-label position="floating">Gender<span class="mandatory-field">*</span></ion-label>
+                      <ion-select class="ion-no-padding" [interfaceOptions]="notifiService.customPopoverOptions"
+                        placeholder="-Select-" name="gender" [(ngModel)]='user.gender' interface="popover">
+                        <ion-select-option value="MALE">Male</ion-select-option>
+                        <ion-select-option value="FEMALE">Female</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col class="ion-padding-top">
+                    <ion-item fill="outline" class="textbox">
+                      <ion-label position="floating">Email Address
+                        <span class="mandatory-field">*</span>
+                      </ion-label>
+                      <ion-input name="EmailAddress" [(ngModel)]="user.username"></ion-input>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col size-lg="2.5" size-md="3" size-sm="3" size-xs="3" class="ion-padding-top">
+                    <ion-item fill="outline" class="textbox">
+                      <ion-label position="floating">Ext
+                        <span class="mandatory-field">*</span>
+                      </ion-label>
+                      <ion-input name="extPhoneNumber" class="extPhoneNumber"
+                        [(ngModel)]=" user.phone_number_extenstion ">
+                      </ion-input>
+                    </ion-item>
+                  </ion-col>
+                  <ion-col size-lg="9.5" size-md="9" size-sm=" 9" size-xs="9" class="ion-padding-top">
+                    <ion-item fill="outline" class="textbox">
+                      <ion-label position="floating">Phone Number
+                        <span class="mandatory-field">*</span>
+                      </ion-label>
+                      <ion-input name="PhoneNumber" type="text" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+                        [(ngModel)]="user.phone_number"></ion-input>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col class="ion-padding-top">
+                    <ion-item fill="outline" class="textbox">
+                      <ion-label position="floating">Password
+                        <span class="mandatory-field">*</span>
+                      </ion-label>
+                      <ion-input name="Password" (ngModelChange)="showPasswordtoggle('keyUp')" #showpassword
+                        type="password" [(ngModel)]="user.password"></ion-input>
+                      <ion-icon slot="end" class="cursor-pointer" name="eye-outline" title="password"
+                        style="color: gray" (mouseup)="showPasswordtoggle('enter')"
+                        (touchend)="showPasswordtoggle('enter')" (mousedown)="showPasswordtoggle('leave')"
+                        (touchstart)="showPasswordtoggle('leave')"></ion-icon>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col class="ion-padding-top">
+                    <ion-item fill="outline" class="textbox">
+                      <ion-label position="floating">Confirm Password
+                        <span class="mandatory-field">*</span>
+                      </ion-label>
+                      <ion-input name="confirmPassword" type="password" (ngModelChange)="showConfirmPasswordtoggle('keyUpConfirm')" #showConfirmpassword [(ngModel)]="user.confirmPassword"></ion-input>
+                      <ion-icon slot="end" class="cursor-pointer" name="eye-outline" title="password"
+                        style="color: gray" (mouseup)="showConfirmPasswordtoggle('enter')"
+                        (touchend)="showConfirmPasswordtoggle('enter')" (mousedown)="showConfirmPasswordtoggle('leave')"
+                        (touchstart)="showConfirmPasswordtoggle('leave')"></ion-icon>
+                    </ion-item>
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+
+                  <ion-col size-lg="4" size-sm="5" style="margin-top: 17px; color:white">
+                    <a routerLink="/login" style="color:white; text-decoration: underline;">Back to Login</a>
+                  </ion-col>
+                  <ion-col size-lg="4" offset-lg="4" size-sm="5" offset-sm="2" class=" ion-padding-top">
+                    <ion-button type="submit" color="primary" expand="block"><ion-label
+                        style="color: var(--ion-color-secondary);">Sign up</ion-label></ion-button>
+                  </ion-col>
+                </ion-row>
+                <!-- <ion-row>
+              <ion-col class=" ion-no-padding">
+                  <div>
+                    <h4 style="margin: 0; color: var(--ion-color-secondary); padding: 0 0 0 7px;">Or</h4>
+                  </div>
+              </ion-col>
+            </ion-row> -->
+                <!-- <ion-row>
+              <ion-col>
+                <ion-button class="microsoft-button">
+                  Back to Login
+                </ion-button>
+              </ion-col>
+            </ion-row> -->
+              </ion-card>
+              <input type="submit" [hidden]="true" />
+            </form>
+          </div>
+
+        </ion-col>
+        <ion-col size-md="6" offset-md="5" size-lg="5" offset-lg="6" class="signup-container"
+          *ngIf="showVerificationCodeView===true">
+          <form (ngSubmit)="emailConfirmationCode()" style="width: 404px;">
+            <ion-card class="confirm-card">
+              <ion-row>
+                <ion-col size="3" style=" font-size: 21px; color:
+              white;
+              margin-top: -4px;">
+                  <ion-icon (click)="showVerificationCodeView=false" routerLink="/login"
+                    name="arrow-back-outline"></ion-icon>
+                </ion-col>
+                <ion-col size="6" class="ion-text-center">
+                  <div class="title-tag ion-text-center">
+                    Sign Up
+                  </div>
+                </ion-col>
+              </ion-row>
+
+              <ion-row>
+                <ion-col class="ion-padding-top">
+                  <ion-item fill="outline" class="textbox">
+                    <ion-label position="floating">Confirmation code
+                    </ion-label>
+                    <ion-input name="signUpconfirmationCode" [(ngModel)]="user.signUpconfirmationCode"></ion-input>
+                    <ion-checkbox slot="end" class="confirmChceked" *ngIf="ischeckedcode"
+                      [checked]="ischeckedcode"></ion-checkbox>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col size="4" style="margin-top: 23px; color:white">
+                  <a style="color:white; text-decoration: underline;" class='cursor-pointer'
+                    (click)="resendConfirmationCode()">Resend Code</a>
+                </ion-col>
+                <ion-col size="4" offset="4" class="ion-padding-top">
+                  <ion-button type="submit" class="login-button" expand="block">Confirm</ion-button>
+                </ion-col>
+              </ion-row>
+              <!-- <ion-row>
+              <ion-col class=" ion-no-padding">
+                  <div>
+                    <h4 style="margin: 0; color: var(--ion-color-secondary); padding: 0 0 0 7px;">Or</h4>
+                  </div>
+              </ion-col>
+            </ion-row> -->
+              <!-- <ion-row>
+              <ion-col>
+                <ion-button class="microsoft-button">
+                  Back to Login
+                </ion-button>
+              </ion-col>
+            </ion-row> -->
+            </ion-card>
+            <input type="submit" [hidden]="true" />
+          </form>
+
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
+</ion-app>
